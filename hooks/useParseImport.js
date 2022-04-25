@@ -87,7 +87,7 @@ const useParseImport = () => {
       }
 
       const newSections = [titleSection, ...remainingSections]
-      console.log(newSections)
+      return newSections
     } catch (error) {
       console.log('Error parsing file: ', error)
     }

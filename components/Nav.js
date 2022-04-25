@@ -16,6 +16,10 @@ export const Nav = ({
   setDarkMode,
   focusedSectionSlug,
   originalTemplate,
+  setSelectedSectionSlugs,
+  setSectionSlugs,
+  setFocusedSectionSlug,
+  setTemplates,
 }) => {
   const markdown = selectedSectionSlugs.reduce((acc, section) => {
     const template = getTemplate(section)
@@ -51,7 +55,23 @@ export const Nav = ({
     fileReader.readAsText(file)
 
     fileReader.onload = () => {
-      parse(fileReader.result, originalTemplate)
+      const slugs = parse(fileReader.result, originalTemplate)
+
+      // Add markdown to storage
+      setTemplates(slugs)
+
+      // Add Slugs to Selected Slugs List
+      const selectedSlugNames = []
+      slugs.forEach((slug) => {
+        selectedSlugNames.push(slug.slug)
+      })
+      setSelectedSectionSlugs(selectedSlugNames)
+
+      // Set Focus to first selected
+      setFocusedSectionSlug(selectedSlugNames[0])
+
+      // Set Custom Sections
+      // TODO
     }
 
     fileReader.onerror = () => {
@@ -65,7 +85,7 @@ export const Nav = ({
     <nav className="flex justify-between p-4 bg-gray-800 align-center w-full">
       <Link href="/">
         <a className="focus:outline-none focus:ring-2 focus:ring-emerald-400 flex items-center">
-          <img className="w-auto h-12" src="readme.svg" alt="readme.so logo" />
+          <img className="w-auto h-12" src="/readme.svg" alt="readme.so logo" />
         </a>
       </Link>
       <div className="flex flex-row-reverse md:flex-row">
@@ -104,7 +124,7 @@ export const Nav = ({
             className="flex flex-row relative items-center mr-4 md:mr-0 px-4 py-2 text-sm font-bold tracking-wide text-white border border-transparent rounded-md shadow-sm bg-emerald-500 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-emerald-500 h-full"
             onClick={handleImportClick}
           >
-            <img className="w-auto h-6 cursor-pointer" src="download.svg" />
+            <img className="w-auto h-6 cursor-pointer" src="/download.svg" />
             <span className="hidden md:inline-block ml-2">{t('nav-import')}</span>
           </button>
           <input
@@ -121,7 +141,7 @@ export const Nav = ({
           className="flex flex-row relative items-center mr-4 md:mr-0 px-4 py-2 text-sm font-bold tracking-wide text-white border border-transparent rounded-md shadow-sm bg-emerald-500 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-emerald-500"
           onClick={downloadMarkdownFile}
         >
-          <img className="w-auto h-6 cursor-pointer" src="download.svg" />
+          <img className="w-auto h-6 cursor-pointer" src="/download.svg" />
           <span className="hidden md:inline-block ml-2">{t('nav-download')}</span>
         </button>
       </div>

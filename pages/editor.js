@@ -76,6 +76,11 @@ export default function Editor({ sectionTemplates }) {
         setDarkMode={setDarkMode}
         focusedSectionSlug={focusedSectionSlug}
         originalTemplate={sectionTemplates}
+        setSelectedSectionSlugs={setSelectedSectionSlugs}
+        setSectionSlugs={setSectionSlugs}
+        setFocusedSectionSlug={setFocusedSectionSlug}
+        templates={templates}
+        setTemplates={setTemplates}
       />
       {showModal && <DownloadModal setShowModal={setShowModal} />}
       <div className="flex md:px-6 md:pt-6 ">

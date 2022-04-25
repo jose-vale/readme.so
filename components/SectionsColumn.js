@@ -83,6 +83,12 @@ export const SectionsColumn = ({
     setSectionSlugs((prev) => prev.filter((s) => s !== section))
     setSelectedSectionSlugs((prev) => [...prev, section])
     setFocusedSectionSlug(localStorage.getItem('current-focused-slug'))
+    console.log('currentSlugList: ')
+    console.log(currentSlugList)
+    console.log('SelectedSectionSlugs: ')
+    console.log(selectedSectionSlugs)
+    console.log('FocusedSectionSlug: ')
+    console.log(focusedSectionSlug)
   }
 
   useEffect(() => {
