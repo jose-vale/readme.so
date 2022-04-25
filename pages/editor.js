@@ -6,8 +6,8 @@ import EditPreviewContainer from '../components/EditPreviewContainer'
 import { Nav } from '../components/Nav'
 import { SectionsColumn } from '../components/SectionsColumn'
 import allSectionTemplates from '../data/index'
-import useLocalStorage from '../hooks/useLocalStorage'
 import useDarkMode from '../hooks/useDarkMode'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 export default function Editor({ sectionTemplates }) {
   const [selectedSectionSlugs, setSelectedSectionSlugs] = useState([])
@@ -75,6 +75,7 @@ export default function Editor({ sectionTemplates }) {
         darkMode={darkMode}
         setDarkMode={setDarkMode}
         focusedSectionSlug={focusedSectionSlug}
+        originalTemplate={sectionTemplates}
       />
       {showModal && <DownloadModal setShowModal={setShowModal} />}
       <div className="flex md:px-6 md:pt-6 ">

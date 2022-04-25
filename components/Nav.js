@@ -1,9 +1,10 @@
-import Link from 'next/link'
-import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
-import Menu from './icons/Menu'
-import Close from './icons/Close'
+import Image from 'next/image'
+import Link from 'next/link'
 import useDeviceDetect from '../hooks/useDeviceDetect'
+import useParseImport from '../hooks/useParseImport'
+import Close from './icons/Close'
+import Menu from './icons/Menu'
 
 export const Nav = ({
   selectedSectionSlugs,
@@ -14,6 +15,7 @@ export const Nav = ({
   darkMode,
   setDarkMode,
   focusedSectionSlug,
+  originalTemplate,
 }) => {
   const markdown = selectedSectionSlugs.reduce((acc, section) => {
     const template = getTemplate(section)
@@ -25,6 +27,7 @@ export const Nav = ({
   }, ``)
 
   const { isMobile } = useDeviceDetect()
+  const { parse } = useParseImport()
 
   const downloadMarkdownFile = () => {
     const a = document.createElement('a')
@@ -36,6 +39,24 @@ export const Nav = ({
       onMenuClick()
     }
     setShowModal(true)
+  }
+
+  const handleImportClick = () => {
+    document.getElementById('uploadfile').click()
+  }
+
+  const handleFileSelection = (e) => {
+    const file = e.target.files[0]
+    const fileReader = new FileReader()
+    fileReader.readAsText(file)
+
+    fileReader.onload = () => {
+      parse(fileReader.result, originalTemplate)
+    }
+
+    fileReader.onerror = () => {
+      console.error('Failed to import file, error: ', fileReader.error)
+    }
   }
 
   const { t } = useTranslation('editor')
@@ -76,6 +97,24 @@ export const Nav = ({
           </button>
         )}
 
+        <div className="pr-4">
+          <button
+            type="button"
+            aria-label="Import Markdown"
+            className="flex flex-row relative items-center mr-4 md:mr-0 px-4 py-2 text-sm font-bold tracking-wide text-white border border-transparent rounded-md shadow-sm bg-emerald-500 hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-emerald-500 h-full"
+            onClick={handleImportClick}
+          >
+            <img className="w-auto h-6 cursor-pointer" src="download.svg" />
+            <span className="hidden md:inline-block ml-2">{t('nav-import')}</span>
+          </button>
+          <input
+            onChange={handleFileSelection}
+            className="hidden"
+            type="file"
+            id="uploadfile"
+            accept=".md"
+          />
+        </div>
         <button
           type="button"
           aria-label="Download Markdown"
