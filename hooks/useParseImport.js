@@ -58,32 +58,31 @@ const useParseImport = () => {
       const sectionLines = []
       let tempTitle
       while (lines.length) {
-        sectionLines.push(lines[0])
         const currentLine = lines[0]
+        sectionLines.push(currentLine)
         lines.shift()
 
         if (!tempTitle && (isGithubProfileIntro(currentLine) || isSectionTitle(currentLine))) {
           tempTitle = currentLine
         }
 
-        if (
-          currentLine !== tempTitle &&
-          (isGithubProfileIntro(currentLine) || isSectionTitle(currentLine))
-        ) {
-          console.log(tempTitle)
-          const sectionTitle = sectionLines.find(
-            (e) => e.startsWith('## ') || e.startsWith('# Hi, ')
-          )
-          const section = parseSection(sectionTitle, sectionLines)
-
-          if (section) {
-            remainingSections.push(section)
-            sectionLines.length = 0
+        if (lines.length) {
+          const nextLine = lines[0]
+          if (!isGithubProfileIntro(nextLine) && !isSectionTitle(nextLine)) {
+            continue
           }
-
-          sectionLines.length = 0
-          tempTitle = null
         }
+
+        const sectionTitle = sectionLines.find((e) => e.startsWith('## ') || e.startsWith('# Hi, '))
+        const section = parseSection(sectionTitle, sectionLines)
+
+        if (section) {
+          remainingSections.push(section)
+          sectionLines.length = 0
+        }
+
+        sectionLines.length = 0
+        tempTitle = null
       }
 
       const newSections = [titleSection, ...remainingSections]
