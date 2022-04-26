@@ -19,7 +19,9 @@ export const Nav = ({
   setSelectedSectionSlugs,
   setSectionSlugs,
   setFocusedSectionSlug,
+  templates,
   setTemplates,
+  saveBackup,
 }) => {
   const markdown = selectedSectionSlugs.reduce((acc, section) => {
     const template = getTemplate(section)
@@ -57,21 +59,25 @@ export const Nav = ({
     fileReader.onload = () => {
       const slugs = parse(fileReader.result, originalTemplate)
 
-      // Add markdown to storage
-      setTemplates(slugs)
+      setTemplates((prev) => [
+        ...prev.filter((s) => !slugs.map((ns) => ns.slug).includes(s.slug)),
+        ...slugs,
+      ])
 
-      // Add Slugs to Selected Slugs List
+      const newTemplates = templates.map((template) => {
+        if (slugs.map((ns) => ns.slug).includes(template.slug)) {
+          return { ...template, markdown: slugs.find((s) => s.slug == template.slug).markdown }
+        }
+        return template
+      })
+      saveBackup(newTemplates)
+
       const selectedSlugNames = []
       slugs.forEach((slug) => {
         selectedSlugNames.push(slug.slug)
       })
       setSelectedSectionSlugs(selectedSlugNames)
-
-      // Set Focus to first selected
-      setFocusedSectionSlug(selectedSlugNames[0])
-
-      // Set Custom Sections
-      // TODO
+      setSectionSlugs((prev) => prev.filter((s) => !selectedSlugNames.includes(s)))
     }
 
     fileReader.onerror = () => {

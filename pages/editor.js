@@ -16,7 +16,7 @@ export default function Editor({ sectionTemplates }) {
   const [showModal, setShowModal] = useState(false)
   const [templates, setTemplates] = useState(sectionTemplates)
   const [showDrawer, toggleDrawer] = useState(false)
-  const { backup } = useLocalStorage()
+  const { backup, saveBackup } = useLocalStorage()
   const [darkMode, setDarkMode] = useDarkMode()
 
   useEffect(() => {
@@ -81,6 +81,7 @@ export default function Editor({ sectionTemplates }) {
         setFocusedSectionSlug={setFocusedSectionSlug}
         templates={templates}
         setTemplates={setTemplates}
+        saveBackup={saveBackup}
       />
       {showModal && <DownloadModal setShowModal={setShowModal} />}
       <div className="flex md:px-6 md:pt-6 ">
