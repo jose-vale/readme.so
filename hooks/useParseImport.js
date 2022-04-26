@@ -26,8 +26,8 @@ const useParseImport = () => {
           }
         } else if (!templateTitle) {
           return {
-            slug: sectionTitle.replace('#', '').replace(' ', '-'),
-            name: sectionTitle.replace('#', ''),
+            slug: sectionTitle.replace('## ', '').replace(' ', '-'),
+            name: sectionTitle.replace('## ', ''),
             markdown: newSection.join('\n'),
           }
         } else {
